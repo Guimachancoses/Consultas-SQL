@@ -1,0 +1,38 @@
+*******************************
+MySQL -- Sighra
+
+Servidor:  192.168.0.4:3306
+Banco:     mclient
+Usuário:   monitor
+Senha:     rotinom
+
+*******************************
+PostgreSQL -- Transp
+
+HOST: 192.168.0.5
+PORT: 5432
+Database: dbaucom
+192.168.0.5/5432
+Usuário: garbuiobi
+Senha: garbuio@7563
+Postgres password: G@rbuio2021
+String Connection
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=192.168.0.5;Port=5432;Database=dbaucom;
+
+HOST: 192.168.0.202
+PORT: 5432
+Database: dbaucom
+192.168.0.202/5432
+Usuário: garbuiobi
+Senha: garbuio@7563
+Postgres password: G@rbuio2021
+
+String Connection
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=192.168.0.202;Port=5432;Database=dbaucom;
+
+*******************************
+SQL Server -- Protheus
+Servidor:  142.0.66.14,1420
+Banco:     CP4I2U_143029_PR_PD
+Usuário:   CLT143029gestao.bi
+Senha:     lesqg67854OXQWK?!
