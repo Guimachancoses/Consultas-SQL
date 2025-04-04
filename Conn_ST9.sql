@@ -1,4 +1,34 @@
-﻿DECLARE @TotalRecords INT;
+﻿/*
+=======================================================================
+Autor:        Guilherme Machancoses
+Data:         04/04/2025
+Versão:       1.0
+Descrição:    Script para realizar paginação dinâmica sobre a tabela ST9010,
+              filtrando registros com base em critérios específicos (ex: T9_SITBEM IN (...),
+              T9_SITMAN IN (...), T9_PLACA preenchido, D_E_L_E_T_ = '').
+
+              Funcionalidades:
+              - Recebe a lista de colunas existentes dinamicamente (@ExistColumns)
+              - Utiliza a tabela SX3 para mapear os títulos das colunas
+              - Calcula o total de registros, total de páginas e registros por página
+              - Traduz valores das colunas T9_SITBEM (Situação do Bem) e T9_PROPRIE (Propriedade)
+              - Executa paginação com ROW_NUMBER() e OFFSET
+              - Realiza joins com TQR010 (modelo), ST6010 (família) e ST7010 (fabricante)
+              - Gera consulta dinâmica com colunas customizadas e metadados de paginação
+
+Observação:
+              Parâmetros genéricos a serem substituídos antes da execução:
+              - <>page</>      → Número da página
+              - <>tabela</>    → Nome da tabela (ex: ST9010)
+              - <>Alias</>     → Alias usado na consulta (ex: ST9)
+              - <>orderby</>   → Campo para ordenação (ex: T9_CODBEM ASC)
+              - <>block</>     → Lista de códigos para T9_SITBEM/T9_SITMAN (ex: 'A','I')
+Aplicação: API - AUCOM, consulta dos veículos cadastrados.
+=======================================================================
+*/
+
+
+DECLARE @TotalRecords INT;
 DECLARE @TotalPages INT;
 DECLARE @RecordsPerPage INT = 1000;
 DECLARE @PageNumber INT = 1;  -- Defina aqui o n�mero da p�gina desejada

@@ -1,3 +1,18 @@
+/*
+-------------------------------------------------------------
+Autor   : Guilherme Machancoses
+Data    : 04/04/2025
+Versão  : 1.0
+Descrição: Consulta para obter a placa, quantidade e código 
+           do produto (COD_PROD) com base no tipo de combustível 
+           (TR6_TIPCOM), utilizando regras específicas para 
+           combustíveis Diesel e Arla. A consulta faz join entre 
+           as tabelas NNS010 e TR6010 e filtra registros válidos 
+           da filial e código informados.
+Aplicação: Consulta do fonte CONCD6.PRW
+-------------------------------------------------------------
+*/
+
 SELECT       
     TR6.TR6_PLACA,
     TR6.TR6_QTDCOM,

@@ -1,3 +1,32 @@
+/*
+=======================================================================
+Autor:        Guilherme Machancoses  
+Data:         04/04/2025  
+Versão:       1.0  
+Descrição:    Script para consultar itens detalhados de um pedido de compra  
+              na tabela SC7010, enriquecendo com dados de produto, fornecedor,  
+              informações logísticas e de pagamento.
+
+              Funcionalidades:
+              - Consulta itens do pedido com base no número do pedido (C7_NUM)
+              - Realiza JOIN com as tabelas SB1 (produto), SA2 (fornecedor) e SX5 (forma de pagamento)
+              - Exibe descrição do produto, fornecedor e modalidade de pagamento
+              - Calcula o total geral dos itens (C7_TOTAL) usando função janela (OVER)
+              - Concatena observações C7_OBS e C7_OBSM em um único campo
+              - Aplica TRIM em campos de texto para remover espaços desnecessários
+              - Filtra apenas registros ativos (D_E_L_E_T_ = ' ')
+              - Ordena os resultados pelo número do item
+
+Observação:
+              Parâmetro genérico a ser substituído antes da execução:
+              - SC7.C7_NUM → Número do pedido desejado (ex: '059172')
+
+Aplicação: Consulta do relatório customizado do pedido de compra solicitado
+            plea contabilidade. Modulo SIGACOM
+=======================================================================
+*/
+
+
 SELECT 
 		TRIM(SC7.C7_ITEM) C7_ITEM, 
         TRIM(SC7.C7_NUM) C7_NUM, 

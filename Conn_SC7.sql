@@ -1,3 +1,34 @@
+/*
+=======================================================================
+Autor:        Guilherme Machancoses
+Data:         04/04/2025
+Versão:       1.0
+Descrição:    Script para realizar paginação dinâmica sobre a tabela SC7010
+              (pedidos de compra), incluindo informações de produto, fornecedor,
+              pagamento e localização do item.
+
+              Funcionalidades:
+              - Define o número de registros por página e calcula o total de páginas
+              - Recebe dinamicamente a lista de colunas (@ExistColumns)
+              - Monta lista de colunas usando a tabela SX3 (descrição de campos)
+              - Filtra registros com base no número do pedido (@NumPc)
+              - Realiza JOINs com as tabelas SB1, SA2 e SX5 para enriquecer os dados
+              - Executa paginação com ROW_NUMBER() e OFFSET
+              - Calcula o total geral dos valores (C7_TOTAL) usando janela (OVER)
+
+Observação:
+              Parâmetros genéricos a serem substituídos antes da execução:
+              - @NumPc         → Número do pedido desejado
+              - @PageNumber    → Número da página (padrão: 1)
+              - @RecordsPerPage → Total de registros por página (padrão: 100)
+
+Aplicação: Portal wTMH, consulta para retornar os pedidos de compras que foram
+             enviados para aprovação. Utilizada nos chamados SOC.001 e SU.001.
+=======================================================================
+*/
+
+
+
 DECLARE @TotalRecords INT;
 DECLARE @TotalPages INT;
 DECLARE @RecordsPerPage INT = 100;

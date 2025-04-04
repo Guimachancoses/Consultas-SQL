@@ -1,3 +1,34 @@
+/*
+=======================================================================
+Autor:        Guilherme Machancoses  
+Data:         04/04/2025  
+Versão:       1.0  
+Descrição:    Script para realizar paginação dinâmica sobre os documentos de entrada  
+              (nota fiscal de fornecedor), incluindo informações de produto, valores,  
+              fornecedor e filial.
+
+              Funcionalidades:
+              - Define o número de registros por página e calcula o total de páginas
+              - Recebe dinamicamente a lista de colunas (@ExistColumns)
+              - Monta lista de colunas com base na tabela SX3 (descrição dos campos)
+              - Realiza JOINs entre SF1, SD1, SA2 e SB1 para enriquecer as informações
+              - Adiciona CNPJ da filial via subquery com SYS_COMPANY (M0_CGC)
+              - Aplica filtros por emissão, quantidade mínima e código de produto
+              - Utiliza ROW_NUMBER() particionado por filial para paginação
+              - Exibe colunas formatadas dinamicamente e metadado TotalRegistros
+
+Observação:
+              Parâmetros genéricos a serem substituídos antes da execução:
+              - @PageNumber      → Número da página (padrão: 1)
+              - @RecordsPerPage  → Total de registros por página (padrão: 1000)
+              - @ExistColumns    → Lista de colunas desejadas, separadas por vírgula
+
+Aplicação: API - Atual, retorna as 10 NF de compra de combustiveis das filiais da Garbuio.
+=======================================================================
+*/
+
+
+
 DECLARE @TotalRecords INT;
 DECLARE @TotalPages INT;
 DECLARE @RecordsPerPage INT = 1000;

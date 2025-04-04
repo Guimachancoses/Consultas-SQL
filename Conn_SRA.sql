@@ -1,3 +1,31 @@
+/*
+=======================================================================
+Autor:        Guilherme Machancoses
+Data:         04/04/2025
+Versão:       1.0
+Descrição:    Script para realizar paginação dinâmica sobre uma tabela genérica,
+              filtrando registros com base em critérios específicos (ex: RA_ZZMOTOR = 'S',
+              D_E_L_E_T_ = '', RA_SITFOLH IN (...)).
+              
+              Funcionalidades:
+              - Recebe a lista de colunas existentes dinamicamente (@ExistColumns)
+              - Utiliza a tabela SX3 para mapear os títulos das colunas
+              - Calcula o total de registros, total de páginas e registros por página
+              - Traduz valores das colunas RA_SITFOLH (Status) e RA_CATCNH (Categoria da CNH)
+              - Executa paginação com ROW_NUMBER() e OFFSET
+              - Gera consulta dinâmica com colunas customizadas e metadados de paginação
+
+Observação:
+              Parâmetros genéricos a serem substituídos antes da execução:
+              - <>page</>      → Número da página
+              - <>tabela</>    → Nome da tabela
+              - <>Alias</>     → Alias usado na consulta
+              - <>orderby</>   → Campo para ordenação
+              - <>block</>     → Lista de códigos de RA_SITFOLH permitidos (ex: ' ', 'D')
+Aplicação: API - AUCOM, consulta dos motoristas cadastrados.
+=======================================================================
+*/
+
 DECLARE @TotalRecords INT;
 DECLARE @TotalPages INT;
 DECLARE @RecordsPerPage INT = 100;

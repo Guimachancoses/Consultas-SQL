@@ -1,3 +1,25 @@
+/*
+-------------------------------------------------------------
+Autor   : Guilherme Machancoses
+Data    : 04/04/2025
+Versão  : 1.0
+Descrição:
+Script dinâmico para realizar paginação em uma tabela específica (CT2010),
+com base em filtros de data (`CT2_DATA`), utilizando `ROW_NUMBER()` 
+para controle de página. O script também:
+
+- Conta o total de registros no intervalo de datas;
+- Calcula total de páginas;
+- Gera dinamicamente os nomes das colunas com seus respectivos títulos da SX3;
+- Exclui colunas indesejadas (como `D_E_L_E_T_`);
+- Exibe o nome e CNPJ da filial via `LEFT JOIN` com a tabela `SYS_COMPANY`;
+- Retorna os dados paginados conforme o número da página informado.
+
+Ideal para uso em APIs ou consultas que necessitam retornar dados com paginação.
+Aplicação: API - Alianzo, consultas das NFs para contabilidade
+-------------------------------------------------------------
+*/
+
 DECLARE @TotalRecords INT;
 DECLARE @TotalPages INT;
 DECLARE @RecordsPerPage INT = 1000;

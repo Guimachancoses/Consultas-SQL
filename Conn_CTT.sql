@@ -1,16 +1,31 @@
+/* 
+=======================================================================
+Autor:        Guilherme Machancoses
+Data:         04/04/2025
+VersÃ£o:       1.0
+DescriÃ§Ã£o:    Script para realizar paginaÃ§Ã£o dinÃ¢mica sobre a tabela CTT010.
+              - Calcula total de registros e pÃ¡ginas com base no filtro D_E_L_E_T_.
+              - Gera consulta dinÃ¢mica com tÃ­tulos das colunas a partir da SX3.
+              - Utiliza ROW_NUMBER() para paginaÃ§Ã£o.
+              - Retorna colunas com alias personalizados, total de registros, total de pÃ¡ginas,
+                nÃºmero da pÃ¡gina atual e quantidade de registros por pÃ¡gina.
+AplicaÃ§Ã£o: API - Alianzo, consulta dos centro de custos cadastrados.
+=======================================================================
+*/
+
 DECLARE @TotalRecords INT;
 DECLARE @TotalPages INT;
 DECLARE @RecordsPerPage INT = 1000;
-DECLARE @PageNumber INT = 1;  -- Defina aqui o número da página desejada
+DECLARE @PageNumber INT = 1;  -- Defina aqui o nï¿½mero da pï¿½gina desejada
 DECLARE @Offset INT;
-DECLARE @CurrentPageRecords INT; -- Página atual
+DECLARE @CurrentPageRecords INT; -- Pï¿½gina atual
 DECLARE @SQL NVARCHAR(MAX);
 DECLARE @ColumnList NVARCHAR(MAX) = '';
 DECLARE @TableName NVARCHAR(MAX) = 'CTT010';  -- Nome da tabela
 DECLARE @Alias NVARCHAR(MAX) = 'CTT';  -- Alias da tabela
 DECLARE @ORDERBY NVARCHAR(MAX) = 'CTT_CUSTO ASC';  -- Ordene pelo campo
 
--- Verificar se a página é igual a 0 e ajustar para 1
+-- Verificar se a pï¿½gina ï¿½ igual a 0 e ajustar para 1
 IF @PageNumber = 0
 BEGIN
     SET @PageNumber = 1;
@@ -27,20 +42,20 @@ EXEC sp_executesql @TotalRecordsQuery,
     N'@TotalRecords INT OUTPUT',
     @TotalRecords OUTPUT;
 
--- Calcular o total de páginas
+-- Calcular o total de pï¿½ginas
 SET @TotalPages = CEILING(@TotalRecords * 1.0 / @RecordsPerPage);
 
 -- Calcular o offset
 SET @Offset = (@PageNumber - 1) * @RecordsPerPage;
 
--- Construir a lista de colunas com os títulos usando FOR XML PATH
+-- Construir a lista de colunas com os tï¿½tulos usando FOR XML PATH
 SET @ColumnList = STUFF((SELECT ', ' + C.COLUMN_NAME + ' AS [' + SX3.X3_TITULO + ']'
                          FROM INFORMATION_SCHEMA.COLUMNS C
                          JOIN SX3010 SX3 ON C.COLUMN_NAME = SX3.X3_CAMPO
                          WHERE C.TABLE_NAME = @TableName
                          FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, '');
 
--- Construir a consulta dinâmica
+-- Construir a consulta dinï¿½mica
 SET @SQL = '
 WITH PaginatedTable AS (
     SELECT *,
@@ -57,7 +72,7 @@ FROM PaginatedTable
 WHERE NumLinha BETWEEN @Offset + 1 AND @Offset + @RecordsPerPage
 ORDER BY ' + @ORDERBY + '';
 
--- Executar a consulta dinâmica
+-- Executar a consulta dinï¿½mica
 EXEC sp_executesql @SQL,
     N'@TotalRecords INT, @TotalPages INT, @PageNumber INT, @Offset INT, @RecordsPerPage INT',
     @TotalRecords, @TotalPages, @PageNumber, @Offset, @RecordsPerPage;

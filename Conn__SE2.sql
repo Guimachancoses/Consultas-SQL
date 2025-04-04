@@ -1,3 +1,35 @@
+/*
+=======================================================================
+Autor:        Guilherme Machancoses  
+Data:         04/04/2025  
+Versão:       1.0  
+Descrição:    Script para consulta de títulos a pagar (duplicatas)  
+              com enriquecimento de informações de fornecedor,  
+              pedido vinculado, bordereaux e origem do documento.
+
+              Funcionalidades:
+              - Consulta títulos da tabela SE2010
+              - Realiza JOIN com SF1, SD1, SA2 e SEA para complementar os dados
+              - Determina o usuário de inclusão a partir de SD1 ou SE2
+              - Traduz códigos de origem da duplicata para descrições compreensíveis
+              - Identifica se o fornecedor está bloqueado
+              - Aplica filtro de data de vencimento real (E2_VENCREA)
+              - Filtra apenas registros ativos (D_E_L_E_T_ = ' ')
+              - Permite filtro por filial e título
+              - Ordena os resultados pela data de vencimento real (E2_VENCREA)
+
+Observação:
+              Parâmetros genéricos a serem substituídos antes da execução:
+              - SE2.E2_FILIAL → faixa de filiais (ex: '01' até 'ZZZZ')
+              - SE2.E2_VENCREA → intervalo de datas (ex: '20250101' a '20250116')
+              - SE2.E2_NUM → filtro por número do título (opcional, comentado)
+
+Aplicação: Relatório do contas a pagar, solicitado pela Karina, modulo SIGACOM
+            Consulta NFs a pagar com o nº do bordero e natureza.
+=======================================================================
+*/
+
+
 SELECT 
     SE2.E2_FILIAL AS FILIAL, -- 1
     SD1.D1_PEDIDO AS PEDIDO, -- 2
@@ -28,24 +60,24 @@ SELECT
     SEA.EA_NUMBOR AS NUMBORD, --24
 	CASE 
 		WHEN SE2.E2_ORIGEM = 'MNTA765' THEN 'Multas'
-		WHEN SE2.E2_ORIGEM = 'FINA091' THEN 'Baixa Autom�tica'
-		WHEN SE2.E2_ORIGEM = 'CNTA100' THEN 'Manuten��o de Contratos'
+		WHEN SE2.E2_ORIGEM = 'FINA091' THEN 'Baixa Autom�tica'
+		WHEN SE2.E2_ORIGEM = 'CNTA100' THEN 'Manuten��o de Contratos'
 		WHEN SE2.E2_ORIGEM = 'MATA100' THEN 'Nota Fiscal de Entrada'
-		WHEN SE2.E2_ORIGEM = 'MATA460' THEN 'Documento de Sa�da'
-		WHEN SE2.E2_ORIGEM = 'FINA378' THEN 'Aglutina��o'
-		WHEN SE2.E2_ORIGEM = 'MNTA766' THEN 'Notifica��es'
+		WHEN SE2.E2_ORIGEM = 'MATA460' THEN 'Documento de Sa�da'
+		WHEN SE2.E2_ORIGEM = 'FINA378' THEN 'Aglutina��o'
+		WHEN SE2.E2_ORIGEM = 'MNTA766' THEN 'Notifica��es'
 		WHEN SE2.E2_ORIGEM = 'FINA050' THEN 'Contas a Pagar'
-		WHEN SE2.E2_ORIGEM = 'FINA290' THEN 'Aglutina��o'
-		WHEN SE2.E2_ORIGEM = 'FINA090' THEN 'Baixa Autom�tica'
+		WHEN SE2.E2_ORIGEM = 'FINA290' THEN 'Aglutina��o'
+		WHEN SE2.E2_ORIGEM = 'FINA090' THEN 'Baixa Autom�tica'
 		WHEN SE2.E2_ORIGEM = 'GPEM670' THEN 'RH'
-		WHEN SE2.E2_ORIGEM = 'CNTA121' THEN 'Gest�o de Contratos'
-		WHEN SE2.E2_ORIGEM = 'FINA080' THEN 'Baixas a Pagar Manuten��o'
+		WHEN SE2.E2_ORIGEM = 'CNTA121' THEN 'Gest�o de Contratos'
+		WHEN SE2.E2_ORIGEM = 'FINA080' THEN 'Baixas a Pagar Manuten��o'
 		WHEN SE2.E2_ORIGEM = 'FINA290M' THEN 'Faturas a pagar'
 		ELSE '' 
 	END AS ORIGEM,
 	CASE 
         WHEN SA2.A2_MSBLQL = 1 THEN 'Sim' 
-        ELSE 'N�o' 
+        ELSE 'N�o' 
     END AS BLOQUEADO
 FROM SE2010 SE2
 LEFT JOIN SF1010 SF1 
